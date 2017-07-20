@@ -6,49 +6,53 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
   TouchableWithoutFeedback
 } from "react-native";
 
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
+
+const PhotoPane = ({ photo }) =>
+  <View style={styles.photoPane}>
+    <Image style={{ width: 200, height: 300 }} source={{ uri: photo.uri }} />
+  </View>;
+
 class InnerViewer extends React.Component {
   render() {
-    const { onPhotoClose, photo } = this.props;
+    const { onClose, photos } = this.props;
     return (
       <View style={styles.viewer}>
-        <TouchableOpacity onPress={onPhotoClose}>
-          <View style={styles.closeButton}>
-            <Text style={styles.closeText}>Close</Text>
-          </View>
+        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+          <Text style={styles.closeText}>Close</Text>
         </TouchableOpacity>
-        <TouchableWithoutFeedback onPress={onPhotoClose}>
-          <Image
-            style={{ width: 200, height: 300 }}
-            source={{ uri: photo.uri }}
-          />
-        </TouchableWithoutFeedback>
+        <ScrollView style={{ flex: 1 }} horizontal={true} pagingEnabled={true}>
+          {photos.map(photo => <PhotoPane photo={photo} key={photo.uri} />)}
+        </ScrollView>
       </View>
     );
   }
 }
 
 export default class PhotoViewer extends React.Component {
-  state = { photo: null };
-
-  onPhotoOpen = photo => {
-    this.setState({ photo });
+  state = {
+    photos: null
   };
 
-  onPhotoClose = () => {
-    this.setState({ photo: null });
+  onPhotoOpen = (photos, index) => {
+    this.setState({ photos });
+  };
+
+  onClose = () => {
+    this.setState({ photos: null });
   };
 
   render() {
-    const { photo } = this.state;
-
+    const { photos } = this.state;
     return (
       <View style={styles.container}>
         {this.props.renderContent({ onPhotoOpen: this.onPhotoOpen })}
-        {photo &&
-          <InnerViewer photo={photo} onPhotoClose={this.onPhotoClose} />}
+        {photos && <InnerViewer photos={photos} onClose={this.onClose} />}
       </View>
     );
   }
@@ -75,7 +79,20 @@ const styles = StyleSheet.create({
   },
 
   closeButton: {
+    position: "absolute",
+    zIndex: 1,
+    top: 20,
+    left: 20,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "white"
+    borderRadius: 5,
+    borderColor: "white",
+    padding: 20
+  },
+
+  photoPane: {
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });

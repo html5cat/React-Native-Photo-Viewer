@@ -33,12 +33,12 @@ export default class App extends React.Component {
       <PhotoViewer
         renderContent={({ onPhotoOpen }) =>
           <ScrollView style={styles.container}>
-            {PHOTOS.map(photo =>
+            {PHOTOS.map((photo, index) =>
               <Item
                 photo={photo}
                 key={photo.uri}
                 onPress={() => {
-                  onPhotoOpen(photo);
+                  onPhotoOpen(PHOTOS, index);
                 }}
               />
             )}
@@ -59,9 +59,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: "#333"
-  },
-
-  caption: {}
-  // alignItems: "center",
-  // justifyContent: "center"
+  }
 });
