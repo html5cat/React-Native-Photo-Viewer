@@ -10,17 +10,37 @@ import {
 import PhotoViewer from "./PhotoViewer";
 
 const PHOTOS = [
-  { key: "a", uri: "https://placebear.com/200/300", caption: "Bear" },
-  { key: "b", uri: "https://placebear.com/200/301", caption: "Bear" },
-  { key: "c", uri: "https://placebear.com/200/302", caption: "Bear" },
-  { key: "d", uri: "https://placebear.com/200/303", caption: "Bear" },
-  { key: "e", uri: "https://placebear.com/200/304", caption: "Bear" }
+  {
+    key: "a",
+    source: { uri: "https://placebear.com/200/300", cache: "force-cache" },
+    caption: "Bear"
+  },
+  {
+    key: "b",
+    source: { uri: "https://placebear.com/200/301", cache: "force-cache" },
+    caption: "Bear"
+  },
+  {
+    key: "c",
+    source: { uri: "https://placebear.com/200/302", cache: "force-cache" },
+    caption: "Bear"
+  },
+  {
+    key: "d",
+    source: { uri: "https://placebear.com/200/303", cache: "force-cache" },
+    caption: "Bear"
+  },
+  {
+    key: "e",
+    source: { uri: "https://placebear.com/200/304", cache: "force-cache" },
+    caption: "Bear"
+  }
 ];
 
 const Item = ({ photo, onPress }) =>
   <View style={styles.item}>
     <TouchableWithoutFeedback onPress={onPress}>
-      <Image style={{ width: 200, height: 300 }} source={{ uri: photo.uri }} />
+      <Image style={{ width: 300, height: 300 }} source={photo.source} />
     </TouchableWithoutFeedback>
     <Text style={styles.caption}>
       {photo.caption}
@@ -36,7 +56,7 @@ export default class App extends React.Component {
             {PHOTOS.map(photo =>
               <Item
                 photo={photo}
-                key={photo.uri}
+                key={photo.key}
                 onPress={() => {
                   onPhotoOpen(PHOTOS, photo.key);
                 }}

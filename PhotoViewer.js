@@ -15,7 +15,7 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const PhotoPane = ({ photo }) =>
   <View style={styles.photoPane}>
-    <Image style={{ width: 200, height: 300 }} source={{ uri: photo.uri }} />
+    <Image style={{ width: 200, height: 300 }} source={photo.source} />
   </View>;
 
 class InnerViewer extends React.Component {
