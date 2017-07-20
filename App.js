@@ -10,11 +10,11 @@ import {
 import PhotoViewer from "./PhotoViewer";
 
 const PHOTOS = [
-  { uri: "https://placebear.com/200/300", caption: "Bear" },
-  { uri: "https://placebear.com/200/301", caption: "Bear" },
-  { uri: "https://placebear.com/200/302", caption: "Bear" },
-  { uri: "https://placebear.com/200/303", caption: "Bear" },
-  { uri: "https://placebear.com/200/304", caption: "Bear" }
+  { key: "a", uri: "https://placebear.com/200/300", caption: "Bear" },
+  { key: "b", uri: "https://placebear.com/200/301", caption: "Bear" },
+  { key: "c", uri: "https://placebear.com/200/302", caption: "Bear" },
+  { key: "d", uri: "https://placebear.com/200/303", caption: "Bear" },
+  { key: "e", uri: "https://placebear.com/200/304", caption: "Bear" }
 ];
 
 const Item = ({ photo, onPress }) =>
@@ -33,12 +33,12 @@ export default class App extends React.Component {
       <PhotoViewer
         renderContent={({ onPhotoOpen }) =>
           <ScrollView style={styles.container}>
-            {PHOTOS.map((photo, index) =>
+            {PHOTOS.map(photo =>
               <Item
                 photo={photo}
                 key={photo.uri}
                 onPress={() => {
-                  onPhotoOpen(PHOTOS, index);
+                  onPhotoOpen(PHOTOS, photo.key);
                 }}
               />
             )}

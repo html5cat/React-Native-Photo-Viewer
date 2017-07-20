@@ -4,7 +4,7 @@ import {
   Text,
   View,
   Image,
-  ScrollView,
+  FlatList,
   TouchableOpacity,
   Dimensions,
   TouchableWithoutFeedback
@@ -20,15 +20,27 @@ const PhotoPane = ({ photo }) =>
 
 class InnerViewer extends React.Component {
   render() {
-    const { onClose, photos } = this.props;
+    const { onClose, photos, photoKey } = this.props;
+    const initilIndex = photos.map(p => p.key).indexOf(photoKey);
     return (
       <View style={styles.viewer}>
+        <FlatList
+          style={styles.hScroll}
+          horizontal={true}
+          pagingEnabled={true}
+          data={photos}
+          renderItem={({ item }) => <PhotoPane photo={item} />}
+          initialNumToRender={1}
+          initialScrollIndex={initilIndex}
+          getItemLayout={(data, index) => ({
+            length: SCREEN_WIDTH,
+            offset: SCREEN_WIDTH * index,
+            index
+          })}
+        />
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeText}>Close</Text>
         </TouchableOpacity>
-        <ScrollView style={{ flex: 1 }} horizontal={true} pagingEnabled={true}>
-          {photos.map(photo => <PhotoPane photo={photo} key={photo.uri} />)}
-        </ScrollView>
       </View>
     );
   }
@@ -39,20 +51,21 @@ export default class PhotoViewer extends React.Component {
     photos: null
   };
 
-  onPhotoOpen = (photos, index) => {
-    this.setState({ photos });
+  onPhotoOpen = (photos, key) => {
+    this.setState({ photos, key });
   };
 
   onClose = () => {
-    this.setState({ photos: null });
+    this.setState({ photos: null, key: null });
   };
 
   render() {
-    const { photos } = this.state;
+    const { photos, key } = this.state;
     return (
       <View style={styles.container}>
         {this.props.renderContent({ onPhotoOpen: this.onPhotoOpen })}
-        {photos && <InnerViewer photos={photos} onClose={this.onClose} />}
+        {photos &&
+          <InnerViewer photos={photos} onClose={this.onClose} photoKey={key} />}
       </View>
     );
   }
@@ -80,7 +93,6 @@ const styles = StyleSheet.create({
 
   closeButton: {
     position: "absolute",
-    zIndex: 1,
     top: 20,
     left: 20,
     borderWidth: StyleSheet.hairlineWidth,
@@ -94,5 +106,10 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT,
     alignItems: "center",
     justifyContent: "center"
+  },
+
+  hScroll: {
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT
   }
 });
